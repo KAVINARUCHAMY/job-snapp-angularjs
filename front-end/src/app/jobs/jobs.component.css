@@ -1,0 +1,58 @@
+#jobCards{
+    margin-top: 8%;
+    width: 100%;
+}
+
+.job-btn{
+    background-color: #158eff;
+    color: white;
+    text-align: center;
+    margin-top: 30px;
+
+    width: 30%;
+    border:none;
+    font-size: 18px;
+}
+
+.applicant{
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 15px;
+    font-size: large;
+    padding: 5px;
+    color: white; 
+    background-color: rgb(13, 175, 100) ;
+    font-size: 1.1em; 
+    display: inline-flex;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+ul {
+    list-style: none;
+}
+
+#applicants li{
+    display: inline-flex;
+    margin-right: 10px;
+    margin-top: 10px;
+
+}
+#applicants li span{
+    text-decoration: none;
+}
+
+::ng-deep .filterdialog .modal-dialog{
+    max-width: 70%;
+    width: 80%
+}
+
+.head {
+    margin: 10px 10px 0;
+}
+
+.mat-h1, .mat-headline, .mat-typography h1 {
+	font: 400 24px / 32px Roboto, "Helvetica Neue", sans-serif;
+	letter-spacing: normal;
+	margin: 10px 10px 16px;
+}

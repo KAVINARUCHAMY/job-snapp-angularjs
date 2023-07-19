@@ -1,0 +1,38 @@
+<app-navbar></app-navbar>
+
+
+<div >
+    <div class="text-center p-4">
+        <h1 style="font-weight:bold; font-size: 25px;padding-top: 6%;">Notifications</h1>
+    </div>
+    <div *ngFor="let notification of userNotifications" class="px-5 mx-auto col justify-content-center" style="max-width: 80%;">
+        <div [ngClass]="notification.positive ? 'border-success text-success':'border-danger text-danger'" class="card text-center mb-3 shadow">
+            <div class="card-header fw-bold">
+            {{notification.title}}
+            </div>
+            <div  [ngClass]="notification.positive ? 'bg-success':'bg-danger'" class="card-body text-white">
+                {{notification.message}}
+                <!-- You're filtered for HR Position at Capegemini! , Kindly contact ronie@gmail.com for futher details -->
+            </div>
+            <div class="card-footer">
+                {{ notification.timestamp| date:'d/M/y, h:mm a'}}
+              </div>
+        </div>
+        <!-- <div class="card text-danger border-danger  text-center mb-3 shadow">
+            <div class="card-header fw-bold">
+            Unfortunatly Nick, You're not filtered!
+            </div>
+            <div class="card-body text-white bg-danger">
+                You're not filtered for HR Position at Capegemini!, Kindly contact ronie@gmail.com for futher details
+            </div>
+            <div class="card-footer">
+                18 Jan - 12:08 PM
+              </div>
+        </div> -->
+    </div>
+    <div *ngIf="userNotifications.length == 0" class="text-center text-muted">
+        <p style="font-size: 20px;">No new notification</p>
+    </div>
+</div>
+
+<app-footer></app-footer>

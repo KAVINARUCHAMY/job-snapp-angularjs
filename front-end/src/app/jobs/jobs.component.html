@@ -1,0 +1,142 @@
+<app-navbar></app-navbar>
+
+<div class="container" id="jobCards" style="padding-bottom: 5%;">
+    <div class="row d-flex justify-content-center">
+        <div class="col-sm-8">
+        <div *ngIf='currentUser =="R"'  class="col-sm-2">
+            <button (click)="goToCreateJob()" class="btn btn-primary"><i class="fas fa-plus"></i> Create Job</button>
+        </div>
+        <div class="text-center">
+            <h1 style="font-weight:bold; font-size: 30px;">Jobs</h1>
+        </div>
+        <div *ngIf="jobs.length==0" class="text-center p-4 text-muted">
+            No jobs have been posted
+        </div>
+        <!-- Recruiter Job list -->
+        <div *ngFor="let job of jobs">
+            <div *ngIf="usersJob(job) && sortType==0 && currentUser =='R'">
+                <div class="card border-primary mb-4" id="jobCard">
+                    <div class="card-title m-1 ">
+                        <h2 style="margin-left: 5%;padding-top:5% ;">{{job.title}}</h2>
+                        <hr style="width: 90%;margin-left: 5%;margin-right: 5%;">
+                    </div>
+                    <div class="card-body" style="margin-left: 5%;padding-bottom: 10px;">
+                        <div style="padding-bottom: 20px;">
+                            {{job.description}}
+                        </div>
+                        <div style="padding-bottom: 20px;">
+                            Number of applicants so far: {{job.usersApplied.length}}
+                        </div>
+                        <div style="padding-bottom: 5px;">
+                            Applicants:
+                        </div>
+                        <u id="applicants" style="text-decoration:none">
+                            <li *ngFor="let u of job.usersApplied" style="text-decoration:none">
+                                <span class="align-middle applicant" [routerLink]="['/users/', u.id]"
+                                    style="text-decoration:none">{{u.name}} {{u.surname}} </span>
+                            </li>
+                        </u>
+                    </div>
+                    <hr style="width: 90%;margin-left: 5%;margin-right: 5%;">
+                    <div class="card-body" style="margin-left: 2%;padding-bottom: 10px;">
+                        <div class="col-sm-12 col-12 text-center">
+                            <button *ngIf="!job.filtered" type="button" class="btn btn-primary" (click)="open(content,job)"> <i class="fas fa-filter"></i> Filter Applicants</button>
+                            <button disabled *ngIf="job.filtered" type="button" class="btn btn-outline-success"> <i class="fas fa-check"></i> Filtered</button>
+                        </div> 
+
+                        <div style="padding-bottom: 20px;float:right;margin-right: 1%;">
+                            Published by You
+                        </div>
+                        <div style="padding-bottom: 20px;float:left;margin-right: 1%;">
+                            {{job.timestamp | date:'d MMMM y, h:mm a'}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Candidate Job list -->
+            <div *ngIf='!usersJob(job) && currentUser =="C"'>
+                <div class="shadow card border mb-4" id="jobCard">
+                    <div class="card-title m-1 ">
+                        <h2 style="float:left;margin-left: 7%;padding-top:5% ;">{{job.title}}</h2>
+                        <div *ngIf="!alreadyApplied(job)" style="float:right;padding-top:5% ;" class="col-2  ">
+                            <button type="button" (click)="newApplication(job.id)" class="btn btn-primary"> <i
+                                    class="fas fa-plus"></i> Apply</button>
+                        </div>
+                        <div *ngIf="alreadyApplied(job)" style="float:right;padding-top:5% ;" class="col-3  ">
+                            <button disabled type="button" class="btn btn-outline-success"> <i class="fas fa-check"></i>
+                                Already applied</button>
+                        </div>
+                        <hr style="width: 90%;margin-left: 5%;margin-right: 5%;">
+
+                    </div>
+
+                    <div class="card-body" style="margin-left: 5%;padding-bottom: 10px;">
+                        <div style="padding-bottom: 20px;">
+                            {{job.description}}
+                        </div>
+
+                        <div style="padding-bottom: 20px;">
+                            Applicants so far: {{job.usersApplied.length}}
+                        </div>
+
+                        <div style="padding-bottom: 20px;float:right;margin-right: 1%;">
+                            Published by <a [routerLink]="['/users/',job.userMadeBy.id]"
+                                style="text-decoration: none;"><b>{{job.userMadeBy.name}}
+                                    {{job.userMadeBy.surname}}</b></a>
+
+                        </div>
+                        <div style="padding-bottom: 20px;float:left;margin-right: 1%;">
+                            {{job.timestamp | date:'d MMMM y, h:mm a'}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #content let-modal>
+    <div class="modal-header head">
+      <h1 class="modal-title" id="modal-basic-title">Filter Applicants</h1>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div *ngIf="currentJob.usersApplied.length != 0">
+    <div class="modal-body">
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Applicant Name</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Email</th>
+                <th scope="col">Resume</th>
+                <th scope="col">Filter Candidate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let u of currentJob.usersApplied;let i=index;">
+                <th scope="row">{{i+1}}</th>
+                <td><a target="_blank" [routerLink]="['/users/', u.id]">{{u.name}} {{u.surname}}</a></td>
+                <td>{{u.phoneNumber}}</td>
+                <td>{{u.username}}</td>
+                <td><a target="_blank" [href]="openPdf(u)">View Resume</a></td>
+                <div class="btn-group btn-group-sm p-2 form-check" style="margin-left: 20px;">
+                    <input class="form-check-input" type="checkbox" value="1" id="flexCheckDefault" (click)="addToList(u.id)">
+                    <label class="form-check-label" for="flexCheckDefault" style="margin-left: 5px; margin-top: 2px; font-size: medium;"> Select</label>
+                </div>
+              </tr>
+            </tbody>
+          </table>
+          <div class="col-sm-12 col-12 text-center ">
+              <button [disabled]="clickedfilter" type="button" class="col-md-2 btn btn-primary" (click)="filterApplicants()"> <i class="fas fa-filter"></i> Filter</button>
+          </div>
+    </div>
+    </div>
+    <div *ngIf="currentJob.usersApplied.length == 0" class="text-center text-muted mt-3 mb-3">
+        <p style="font-size: 20px;">No Applicants so far...</p>        
+    </div>
+  </ng-template>
+<app-footer></app-footer>
